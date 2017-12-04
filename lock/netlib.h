@@ -17,7 +17,4 @@ typedef struct sockaddr_in
 } sockaddr_in;
 
 
-/* Establish TCP connection
- * addr_string is in 255.255.255.255 format
- * returns socket descriptor */
-int getClientSocket( char *addr_string );
+key_t requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic );
