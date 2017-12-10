@@ -1,8 +1,17 @@
 #include"netlib.h"
 
 
+#include<sys/types.h>
 #include<sys/socket.h>
+#include<netinet/in.h>
 #include<arpa/inet.h>
+#include<unistd.h>
+#include<string.h>
+#include<stdlib.h>
+#include<stdio.h>
+
+#include"../lib/cryptolib.h"
+
 
 
 #define RECV_MSG_SIZE 255
@@ -13,47 +22,47 @@ static char *createSendMsg( char *surname, char *name, char *patronymic, int *le
 	char *send_msg;
 	int len;
 	
-	len = 5 + strlen( surname ) + strlen( name ) + strlen( patronymic );
+	len = 5 + strlen( surname ) + strlen( name ) + strlen( patronymic ) + 5;
 	send_msg = (char *)calloc( len, sizeof( *send_msg ) );
-	sprintf( send_msg, "a#%s#%s#%s", surname, name, patronymic );
+	sprintf( send_msg, "a#%s#%s#%s\n", surname, name, patronymic );
 
 	*length = len;
 	return send_msg;
 }
 
 
-key_t keyFromRecvMsg( char *msg, int msg_len )
+static key_type keyFromRecvMsg( char *msg, int msg_len )
 {
-	key_t key;
+	key_type key;
 
 	if( msg[1] != '#' )
 	{
-		fprintf( stderr, "Wrong message format" );
+		fprintf( stderr, "Wrong message format\n" );
 		return 0;
 	}
 
 	if( msg[0] != 'k' )
 	{
-		fprintf( stderr, "Wrong message type" );
+		fprintf( stderr, "Wrong message type\n" );
 		return 0;
 	}
 
 	/* Key starting from third character ( k#key ) */
-	key = atoll( msg[2] )
+	key = atoll( &msg[2] );
 
 	return key;
 
 }
 
-key_t requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic )
+key_type requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic )
 {
 	int sockid = 0;
-	in_addr addr_struct_internal;
-	sockaddr_in addr_struct;
+	struct in_addr addr_struct_internal;
+	struct sockaddr_in addr_struct;
 	char *send_msg;
 	char recv_msg[RECV_MSG_SIZE] = "";
 	int send_msg_len = 0, recv_msg_len = 0;
-	key_t key;
+	key_type key = 0;
 
 	
 	/* Fill addr_struct */
@@ -77,6 +86,7 @@ key_t requestKey( unsigned short port, char *addr_string, char *surname, char *n
 		fprintf( stderr, "Cannot connect to server\n" );
 		return 0;
 	}
+	fprintf( stderr, "Connected to server\n" );
 
 
 	/* Sending FIO */
@@ -85,8 +95,9 @@ key_t requestKey( unsigned short port, char *addr_string, char *surname, char *n
 	{
 		fprintf( stderr, "Cannot send data to server\n" );
 		return 0;
-	}
+	}	
 	free( send_msg );
+	fprintf( stderr, "Sended massege\n" );
 
 
 	/* Receiving key */
@@ -95,6 +106,7 @@ key_t requestKey( unsigned short port, char *addr_string, char *surname, char *n
 		fprintf( stderr, "Cannot receive data from server\n" );
 		return 0;
 	}
+	printf( "Received:%s:end\n", recv_msg );
 	key = keyFromRecvMsg( recv_msg, recv_msg_len );
 
 
