@@ -39,7 +39,7 @@ void btoothServer( int port )
 
 	/* Filling serv_addr */
 	serv_addr.rc_family = AF_BLUETOOTH;
-	serv_addr.rc_bdaddr = AD_BTOOTH;		/* TODO: Maybe its better to hardcode in */
+	serv_addr.rc_bdaddr = *BDADDR_ANY;		/* TODO: Maybe its better to hardcode in */
 	serv_addr.rc_channel = (uint8_t) port;
 
 
