@@ -12,7 +12,7 @@ int main( void )
 {
 	key_type key;
 	
-	//waitClient();
+	btoothServer( 1 );
 	key = requestKey( PORT, IP_SERVER, "Pavlov", "Anton", "Egorovich" );
 	printf( "%lli\n", key );
 	openLock();
