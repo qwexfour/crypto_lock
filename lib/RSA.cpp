@@ -3,6 +3,7 @@
 #include "time.h"
 #include "longdiv.h"
 #include <stdlib.h>
+#include <string.h>
 #include "RSA.h"
 
 #ifndef RSA_h
@@ -462,4 +463,15 @@ void StrToNumber(char *a, number res[]) {
 	return;
 }
 
+void HashFunction(char *c, number res[]) {
+	int s = strlen(c);
+	printf("%d \n", s);
+	int i = 0;
+	int j = 0;
+	for (i; i < s; i++) {
+		res[i%16] += (number)c[i]*i;
+	}
+}
+
 #endif /*RSA_h*/
+//1505Oooo

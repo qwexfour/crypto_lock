@@ -6,8 +6,8 @@
 
 #define MAXNUMBER ((number)(-1))
 
-#define LENGTH_BITS 256 //длина числа в битах
-#define LENGTH_2BYTES LENGTH_BITS / 16 //длина 2-хбайтовых чисел
+#define LENGTH_BITS 256 //length of number bits
+#define LENGTH_2BYTES LENGTH_BITS / 16 //length of 2-bytes numbers
 
 typedef unsigned short number;
 typedef unsigned long twonumber;
@@ -16,22 +16,21 @@ typedef unsigned long twonumber;
 #define HIWORD(T)((unsigned short)(T>>16))
 #define MAKELONG(a,b) ((((unsigned long long int)(a))<<16)+b)
 
-//длина числа а
+//length of number а
 int LengthLong(number a[]);
 
-//занулить а длиной до 16 2-хбайтовых слов
 void ZeroLong(number a[]);
 
-//присвоение числу а число b
+//a = b
 void AssignLong(number a[], number b[]);
 
-// 1 если а>b, -1 если a<b, 0 если a=b
+// compare, 1 - a>b, -1 - a<b, 0 - a=b
 int CmpLong(number a[], number b[]);
 
-//печать числа до 256 бит
+//print number before 256 bits
 void PrintfLong(number a[]);
 
-//сгенерировать слчайное a
+//generation rand a
 void RandLong(number a[], int s);
 
 // c = a*b mod n
@@ -43,18 +42,20 @@ void SquareModLong(number a[], number n[], number c[]);
 // c = a^b mod p
 void PowerModBinary(number a[], number b[], number mod[], number result[]);
 
-//подпись текста m
+//signature m
 void SignatureRSA(number m[], number close_key_d[], number open_key_n[], number result[]);
 
-//проверка подписи, 1-пройдена, -1-не пройдена
+//verification of signature, 1- ok, -1- error
 int VerificationSignatureRSA(number m[], number s[], number oped_key_e[], number open_key_n[]);
 
-//генераци€ простого числа a, заданной длины
+//generation prime number a
 void GenPrimeNumber(number a[], int Length_a);
 
-//генераци€ открытого и закрытого ключей 
+//generation open and close keys
 void GenKeys(number open_key_e[], number open_key_n[], number close_key_d[]);
 
 void NumberToStr(number a[], char *res);
 
 void StrToNumber(char *a, number res[]);
+
+void HashFunction(char *c, number res[]);
