@@ -10,8 +10,8 @@
 
 #define MAXNUMBER ((number)(-1))
 
-#define LENGTH_BITS 256 //длина числа в битах
-#define LENGTH_2BYTES LENGTH_BITS / 16 //длина 2-хбайтовых чисел
+#define LENGTH_BITS 256 //length of number 
+#define LENGTH_2BYTES LENGTH_BITS / 16 //length 2-хбайтовых чисел
 
 typedef unsigned short number;
 typedef unsigned long twonumber;
@@ -138,8 +138,8 @@ static void SquareLong(number a[], number c[]) {
 //печать числа
 void PrintfLong(number a[]) {
 	int i = 0;
-	i = LengthLong(a) - 1;
-	if (i == -1) printf("%04x ", a[0]);
+	i = LENGTH_2BYTES - 1;
+	//if (i == -1) printf("%04x ", a[0]);
 	for (i; i >= 0; i--) {
 		printf("%04x ", a[i]);
 	}
@@ -218,10 +218,10 @@ void SignatureRSA(number m[], number close_key_d[], number open_key_n[],number r
 }
 
 //проверка подписи, 1-пройдена, -1-не пройдена
-int VerificationSignatureRSA(number m[], number s[], number oped_key_e[], number open_key_n[]) {
+int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number open_key_n[]) {
 	number m1[LENGTH_2BYTES];
 	ZeroLong(m1);
-	PowerModBinary(s, oped_key_e, open_key_n, m1);
+	PowerModBinary(s, open_key_e, open_key_n, m1);
 	if (CmpLong(m, m1) == 0) return 1;
 	return -1;
 }
@@ -441,6 +441,25 @@ void GenKeys(number open_key_e[], number open_key_n[], number close_key_d[]) {
 	AssignLong(open_key_e, e);
 	AssignLong(close_key_d, d);
 	
+}
+
+void NumberToStr(number a[],char *res) {
+	int i = LENGTH_2BYTES - 1;
+	int j = 0;
+	for (i, j = 0; i >= 0; i--, j+=5) {
+		sprintf(&res[j], "%04x ", a[i]);
+	}
+}
+
+void StrToNumber(char *a, number res[]) {
+	int i = LENGTH_2BYTES -1;
+	int j = 0;
+	int k = 0;
+	for (i, j; i >= 0; i--, j += 5) {
+		sscanf(&a[j], "%04x", &k);
+		res[i] = (number)k;
+	}
+	return;
 }
 
 #endif /*RSA_h*/

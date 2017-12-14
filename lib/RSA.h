@@ -54,3 +54,7 @@ void GenPrimeNumber(number a[], int Length_a);
 
 //генерация открытого и закрытого ключей 
 void GenKeys(number open_key_e[], number open_key_n[], number close_key_d[]);
+
+void NumberToStr(number a[], char *res);
+
+void StrToNumber(char *a, number res[]);
