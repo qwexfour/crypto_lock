@@ -10,14 +10,15 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-#include"../lib/cryptolib.h"
-
+#include"../lib/rsa.h"
+#include"../lib/msglib.h"
 
 
 #define RECV_MSG_SIZE 255
 
 
-static char *createSendMsg( char *surname, char *name, char *patronymic, int *length )
+#if 0
+char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
 {
 	char *send_msg;
 	int len;
@@ -31,7 +32,7 @@ static char *createSendMsg( char *surname, char *name, char *patronymic, int *le
 }
 
 
-static key_type keyFromRecvMsg( char *msg, int msg_len )
+static key_type keyFromServMsg( char *msg, int msg_len )
 {
 	key_type key;
 
@@ -53,6 +54,8 @@ static key_type keyFromRecvMsg( char *msg, int msg_len )
 	return key;
 
 }
+#endif
+
 
 key_type requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic )
 {
@@ -90,7 +93,7 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 
 
 	/* Sending FIO */
-	send_msg = createSendMsg( surname, name, patronymic, &send_msg_len );
+	send_msg = makeAuthMsg( surname, name, patronymic, &send_msg_len );
 	if( ( send( sockid, (void *)send_msg, send_msg_len, 0 ) ) != send_msg_len )
 	{
 		fprintf( stderr, "Cannot send data to server\n" );
@@ -107,7 +110,7 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 		return 0;
 	}
 	printf( "Received:%s:end\n", recv_msg );
-	key = keyFromRecvMsg( recv_msg, recv_msg_len );
+	//key = keyFromServMsg( recv_msg, recv_msg_len );
 
 
 	/* Closing socket */
