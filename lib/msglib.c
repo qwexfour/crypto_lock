@@ -8,7 +8,7 @@
 
 
 /* To request key_e (lock -> server) */
-char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
+char *makeAuthMsg( const char *surname, const char *name, const char *patronymic, int *length )
 {
 	char *send_msg;
 	int len;
@@ -26,7 +26,7 @@ char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
 
 
 /* To register a client (client -> server) */
-char *makeRegMsg( char *surname, char *name, char *patronymic, char *key_e, char *key_n, int *length )
+char *makeRegMsg( const char *surname, const char *name, const char *patronymic, const char *key_e, const char *key_n, int *length )
 {
 	char *send_msg;
 	int len;
@@ -45,7 +45,7 @@ char *makeRegMsg( char *surname, char *name, char *patronymic, char *key_e, char
 
 /* WARNING: Do not send
  * Returns string for signing */
-char *makeOpenText( char *surname, char *name, char *patronymic, char *time, int *length )
+char *makeOpenText( const char *surname, const char *name, const char *patronymic, const char *time, int *length )
 {
 	char *send_msg;
 	int len;
@@ -63,7 +63,7 @@ char *makeOpenText( char *surname, char *name, char *patronymic, char *time, int
 }
 
 
-char *makeOpenMsg( char *surname, char *name, char *patronymic, char *time, char *sign, int *length )
+char *makeOpenMsg( const char *surname, const char *name, const char *patronymic, const char *time, const char *sign, int *length )
 {
 	char *send_msg;
 	int len;
@@ -81,7 +81,7 @@ char *makeOpenMsg( char *surname, char *name, char *patronymic, char *time, char
 }
 
 
-int parseMsg( char *msg, parsed_msg_t *parsed_msg )
+int parseMsg( const char *msg, parsed_msg_t *parsed_msg )
 {
 	char ch;
 	int i = 0;			/* Internal counter */

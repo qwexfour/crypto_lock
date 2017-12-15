@@ -35,17 +35,17 @@ typedef struct parsed_msg
  *
  * All returned strings must be freed. */
 
-char *makeAuthMsg ( char *surname, char *name, char *patronymic, int *length );
+char *makeAuthMsg ( const char *surname, const char *name, const char *patronymic, int *length );
 
-char *makeRegMsg  ( char *surname, char *name, char *patronymic, char *key_e, char *key_n, int *length );
+char *makeRegMsg  ( const char *surname, const char *name, const char *patronymic, const char *key_e,const char *key_n, int *length );
 
-char *makeOpenText( char *surname, char *name, char *patronymic, char *time, int *length );
+char *makeOpenText( const char *surname, const char *name, const char *patronymic, const char *time, int *length );
 
-char *makeOpenMsg ( char *surname, char *name, char *patronymic, char *time, char *sign, int *length );
+char *makeOpenMsg ( const char *surname, const char *name, const char *patronymic, const char *time, const char *sign, int *length );
 
 
 /* Returns 0 if the message parsed successfully */
-int parseMsg( char *msg, parsed_msg_t *parsed_msg );
+int parseMsg( const char *msg, parsed_msg_t *parsed_msg );
 
 
 #endif /* MSG_LIB */

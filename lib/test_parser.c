@@ -17,7 +17,7 @@ int main( int argc, char **argv )
 		printf( "Name:       %s\n", p.name );
 		printf( "Patronymic: %s\n", p.patronymic );
 		printf( "Text:       %s\n", p.text );
-		printf( "Key:        %s\n", p.key );
+		printf( "Key:        %s\n", p.key_e );
 	}
 	else
 	{
