@@ -24,15 +24,19 @@ public:
 
 signals:
     void messageReceived(const QString &sender, const QString &message);
+    //void disconnected();
 
 private slots:
     void readBTSocket();
     void readTCPSocket();
+    void connectedTCP();
+    void connectedBT();
+    void disconnected();
 
 private:
     Ui::MainWindow *ui;
-    QBluetoothSocket *btsocket;
     QTcpSocket *tcpsocket;
+    QBluetoothSocket *btsocket;
     QBluetoothServiceInfo* service;
 };
 
