@@ -22,7 +22,9 @@ typedef struct parsed_msg
 	char name[BUFF_SIZE];
 	char patronymic[BUFF_SIZE];
 	char text[BUFF_SIZE];
-	char key[BUFF_SIZE];
+	char key_e[BUFF_SIZE];
+	char key_n[BUFF_SIZE];
+	char sign[BUFF_SIZE];
 } parsed_msg_t;
 
 
@@ -30,11 +32,12 @@ typedef struct parsed_msg
 
 /* All make functions return size of generated string 
  * through length pointer if it is not NULL.
+ *
  * All returned strings must be freed. */
 
 char *makeAuthMsg ( char *surname, char *name, char *patronymic, int *length );
 
-char *makeRegMsg  ( char *surname, char *name, char *patronymic, char *key, int *length );
+char *makeRegMsg  ( char *surname, char *name, char *patronymic, char *key_e, char *key_n, int *length );
 
 char *makeOpenText( char *surname, char *name, char *patronymic, char *time, int *length );
 

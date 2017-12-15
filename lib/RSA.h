@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "stdlib.h"
 #include "time.h"
 #include "longdiv.h"
@@ -9,7 +8,7 @@
 #define LENGTH_BITS 256 //length of number bits
 #define LENGTH_2BYTES LENGTH_BITS / 16 //length of 2-bytes numbers
 
-typedef unsigned short number;
+typedef unsigned short number;   //usage: number a[ LENGTH_2BYTES ];
 typedef unsigned long twonumber;
 
 #define LOWORD(T)((unsigned short)(T))
@@ -46,7 +45,7 @@ void PowerModBinary(number a[], number b[], number mod[], number result[]);
 void SignatureRSA(number m[], number close_key_d[], number open_key_n[], number result[]);
 
 //verification of signature, 1- ok, -1- error
-int VerificationSignatureRSA(number m[], number s[], number oped_key_e[], number open_key_n[]);
+int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number open_key_n[]);
 
 //generation prime number a
 void GenPrimeNumber(number a[], int Length_a);

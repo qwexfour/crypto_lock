@@ -1,7 +1,7 @@
 #ifndef BTOOTH_LIB
 #define BTOOTH_LIB
 
-void btoothServer( int port );
+int btoothServer( int port );
 
 
 

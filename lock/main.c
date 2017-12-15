@@ -2,7 +2,6 @@
 #include<stdio.h>
 
 #include"../lib/consts.h"
-#include"../lib/cryptolib.h"
 #include"locklib.h"
 #include"netlib.h"
 #include"btoothlib.h"
@@ -10,11 +9,11 @@
 
 int main( void )
 {
-	key_type key;
+	//char key_e[255], key_n[255];
 	
 	btoothServer( 1 );
-	key = requestKey( PORT, IP_SERVER, "Pavlov", "Anton", "Egorovich" );
-	printf( "%lli\n", key );
+	//requestKey( PORT, IP_SERVER, "Pavlov", "Anton", "Egorovich", key_e, key_n );
+	//printf( "%s %s\n", key_e, key_n );
 	openLock();
 	return 0;
 }

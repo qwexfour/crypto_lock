@@ -10,54 +10,37 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-#include"../lib/rsa.h"
 #include"../lib/msglib.h"
 
 
 #define RECV_MSG_SIZE 255
 
 
-#if 0
-char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
+
+static int keyFromServMsg( char *msg, char *key_e, char *key_n )
 {
-	char *send_msg;
-	int len;
+	parsed_msg_t parsed_msg;
 	
-	len = 5 + strlen( surname ) + strlen( name ) + strlen( patronymic ) + 5;
-	send_msg = (char *)calloc( len, sizeof( *send_msg ) );
-	sprintf( send_msg, "a#%s#%s#%s\n", surname, name, patronymic );
+	if( !parseMsg( msg, &parsed_msg ) )
+	{
+		fprintf( stderr, "Cannot parse\n" );
+		return -1;
+	}
+	
+	if( parsed_msg.type != KEY )
+	{
+		fprintf( stderr, "Wrong format: not a key\n" );
+		return -1;
+	}
 
-	*length = len;
-	return send_msg;
+	strcpy( parsed_msg.key_e, key_e );
+	strcpy( parsed_msg.key_n, key_n );
+
+	return 0;
 }
 
 
-static key_type keyFromServMsg( char *msg, int msg_len )
-{
-	key_type key;
-
-	if( msg[1] != '#' )
-	{
-		fprintf( stderr, "Wrong message format\n" );
-		return 0;
-	}
-
-	if( msg[0] != 'k' )
-	{
-		fprintf( stderr, "Wrong message type\n" );
-		return 0;
-	}
-
-	/* Key starting from third character ( k#key ) */
-	key = atoll( &msg[2] );
-
-	return key;
-
-}
-#endif
-
-
-key_type requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic )
+int requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic, char *key_e, char *key_n )
 {
 	int sockid = 0;
 	struct in_addr addr_struct_internal;
@@ -65,7 +48,6 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 	char *send_msg;
 	char recv_msg[RECV_MSG_SIZE] = "";
 	int send_msg_len = 0, recv_msg_len = 0;
-	key_type key = 0;
 
 	
 	/* Fill addr_struct */
@@ -79,7 +61,7 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 	if( ( sockid = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP ) ) < 0 )
 	{
 		fprintf( stderr, "Cannot create socket\n" );
-		return 0;
+		return -1;
 	}
 
 
@@ -87,7 +69,7 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 	if( connect( sockid, ( struct sockaddr * )&addr_struct, sizeof( addr_struct ) ) < 0 )
 	{
 		fprintf( stderr, "Cannot connect to server\n" );
-		return 0;
+		return -1;
 	}
 	fprintf( stderr, "Connected to server\n" );
 
@@ -97,7 +79,7 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 	if( ( send( sockid, (void *)send_msg, send_msg_len, 0 ) ) != send_msg_len )
 	{
 		fprintf( stderr, "Cannot send data to server\n" );
-		return 0;
+		return -1;
 	}	
 	free( send_msg );
 	fprintf( stderr, "Sended massege\n" );
@@ -107,16 +89,21 @@ key_type requestKey( unsigned short port, char *addr_string, char *surname, char
 	if( ( recv_msg_len = recv( sockid, (void *)recv_msg, RECV_MSG_SIZE, 0 ) ) < 0 )
 	{
 		fprintf( stderr, "Cannot receive data from server\n" );
-		return 0;
+		return -1;
 	}
-	printf( "Received:%s:end\n", recv_msg );
-	//key = keyFromServMsg( recv_msg, recv_msg_len );
+	fprintf( stderr, "Received:%s\n", recv_msg );
+
+	/* Parsing keys */
+	if( !keyFromServMsg( recv_msg, key_e, key_n ) )
+	{
+		fprintf( stderr, "Cannot parse key\n" );
+		return -1;
+	}
 
 
 	/* Closing socket */
 	close( sockid );
 
-
-	return key;
+	return 0;
 
 }

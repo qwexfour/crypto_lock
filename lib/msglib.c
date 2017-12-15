@@ -7,7 +7,7 @@
 
 
 
-
+/* To request key_e (lock -> server) */
 char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
 {
 	char *send_msg;
@@ -25,14 +25,15 @@ char *makeAuthMsg( char *surname, char *name, char *patronymic, int *length )
 }
 
 
-char *makeRegMsg( char *surname, char *name, char *patronymic, char *key, int *length )
+/* To register a client (client -> server) */
+char *makeRegMsg( char *surname, char *name, char *patronymic, char *key_e, char *key_n, int *length )
 {
 	char *send_msg;
 	int len;
 
-	len = 7 + strlen( surname ) + strlen( name ) + strlen( patronymic ) + strlen( key );
+	len = 8 + strlen( surname ) + strlen( name ) + strlen( patronymic ) + strlen( key_e ) + strlen( key_n );
 	send_msg = (char *)calloc( len, sizeof( *send_msg ) );
-	sprintf( send_msg, "r#%s#%s#%s#%s\n", surname, name, patronymic, key );
+	sprintf( send_msg, "r#%s#%s#%s#%s#%s\n", surname, name, patronymic, key_e, key_n );
 
 
 	if( length != NULL )
@@ -163,7 +164,30 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 			parsed_msg->patronymic[i] = '\0';
 
 
-			/* Reading key */
+			/* Reading key_e */
+			for( i = 0; ; i++, j++ )
+			{
+				ch = msg[j];
+
+				if( ch == '\n' || ch == '\0' )
+				{
+					return -1;
+				}
+				if( ch == '#' && i == 0 )
+				{
+					return -1;
+				}
+				if( ch == '#' )
+				{
+					j++;
+					break;
+				}
+				parsed_msg->key_e[i] = ch;
+			}
+			parsed_msg->key_e[i] = '\0';
+
+
+			/* Reading key_n */
 			for( i = 0; ; i++, j++ )
 			{
 				ch = msg[j];
@@ -180,9 +204,9 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 					}
 					break;
 				}
-				parsed_msg->key[i] = ch;
+				parsed_msg->key_n[i] = ch;
 			}
-			parsed_msg->key[i] = '\0';
+			parsed_msg->key_n[i] = '\0';
 
 			return 0;
 		case 'a':
@@ -366,7 +390,7 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 			}
 
 
-			/* Reading key */
+			/* Reading sign */
 			for( i = 0; ; i++, j++ )
 			{
 				ch = msg[j];
@@ -383,9 +407,9 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 					}
 					break;
 				}
-				parsed_msg->key[i] = ch;
+				parsed_msg->sign[i] = ch;
 			}
-			parsed_msg->key[i] = '\0';
+			parsed_msg->sign[i] = '\0';
 
 			return 0;
 		case 'k':
@@ -397,7 +421,30 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 			j = 2;   // Excluded first two symbols
 
 
-			/* Reading key */
+			/* Reading key_e */
+			for( i = 0; ; i++, j++ )
+			{
+				ch = msg[j];
+
+				if( ch == '\n' || ch == '\0' )
+				{
+					return -1;
+				}
+				if( ch == '#' && i == 0 )
+				{
+					return -1;
+				}
+				if( ch == '#' )
+				{
+					j++;
+					break;
+				}
+				parsed_msg->key_e[i] = ch;
+			}
+			parsed_msg->key_e[i] = '\0';
+
+
+			/* Reading key_n */
 			for( i = 0; ; i++, j++ )
 			{
 				ch = msg[j];
@@ -414,9 +461,9 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 					}
 					break;
 				}
-				parsed_msg->key[i] = ch;
+				parsed_msg->key_n[i] = ch;
 			}
-			parsed_msg->key[i] = '\0';
+			parsed_msg->key_n[i] = '\0';
 
 			return 0;
 		case 'm':
@@ -428,7 +475,7 @@ int parseMsg( char *msg, parsed_msg_t *parsed_msg )
 			j = 2;   // Excluded first two symbols
 
 
-			/* Reading key */
+			/* Reading text */
 			for( i = 0; ; i++, j++ )
 			{
 				ch = msg[j];
