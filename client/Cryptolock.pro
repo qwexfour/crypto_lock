@@ -27,14 +27,56 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        lib/RSA.c \
+        lib/msglib.c \
+        lib/longdiv.c
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+        lib/RSA.h \
+        lib/msglib.h \
+        lib/consts.h \
+        lib/longdiv.h
 
 FORMS += \
         mainwindow.ui
 
-CONFIG += mobility
+CONFIG += mobility c11
 MOBILITY = connectivity
 
+
+#unix:!macx: LIBS += -L$$PWD/../lib/ -ltest_parser
+
+#INCLUDEPATH += $$PWD/../
+#DEPENDPATH += $$PWD/../
+
+#unix:!macx: PRE_TARGETDEPS += $$PWD/../lib/libtest_parser.a
+
+
+#INCLUDEPATH += $$PWD/../
+#DEPENDPATH += $$PWD/../
+
+# msglib
+#unix:!macx:
+#LIBS += -L$$PWD/../lib/ -lmsglib
+#unix:!macx:
+#PRE_TARGETDEPS += $$PWD/../lib/libmsglib.a
+
+#longdiv
+#unix:!macx:
+#LIBS += -L$$PWD/../lib/ -llongdiv
+#unix:!macx:
+#PRE_TARGETDEPS += $$PWD/../lib/liblongdiv.a
+
+# RSA
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/release/ -lRSA
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/debug/ -lRSA
+#else:unix:
+#LIBS += -L$$PWD/../lib/ -lRSA
+#win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../lib/release/libRSA.a
+#else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../lib/debug/libRSA.a
+#else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../lib/release/RSA.lib
+#else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../lib/debug/RSA.lib
+#else:unix:
+#PRE_TARGETDEPS += $$PWD/../lib/libRSA.a

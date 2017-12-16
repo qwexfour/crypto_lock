@@ -27,17 +27,18 @@ signals:
     //void disconnected();
 
 private slots:
-    void readBTSocket();
+    void readTCPSocket1();
     void readTCPSocket();
     void connectedTCP();
-    void connectedBT();
+    void connectedTCP1();
     void disconnected();
 
 private:
     Ui::MainWindow *ui;
     QTcpSocket *tcpsocket;
-    QBluetoothSocket *btsocket;
-    QBluetoothServiceInfo* service;
+    //QBluetoothSocket *btsocket;
+    //QBluetoothServiceInfo* service;
+    QTcpSocket *tcpsocket1;
 };
 
 #endif // MAINWINDOW_H
