@@ -21,6 +21,7 @@ extern "C" {
 //#define IP_SERVER "192.168.137.17"
 //#define IP_LOCK "192.168.137.31"
 //#define AD_BTOOTH "A0:E9:DB:06:58:58"
+#define BUFF_SIZE 255
 
 using namespace std;
 
@@ -42,12 +43,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::SignUp);//push button to SignUp
     connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::ComeIn);//push button to SignIn
     connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::myexit);//push button to myexit
+    connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::delete_account);
     //delete service;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::delete_account()
+{
+    QFile("Keys.txt").remove();
+    QMessageBox::information(NULL,QObject::tr("Delete account"), tr("Account is removed"));
 }
 
 void MainWindow::connectedTCP()
@@ -73,31 +81,39 @@ void MainWindow::connectedTCP()
     number open_key_e1[LENGTH_2BYTES];
     number open_key_n1[LENGTH_2BYTES];
     number close_key_d1[LENGTH_2BYTES];
+    QMessageBox::information(NULL,QObject::tr("Registration"), tr("Start generation"));
     GenKeys(open_key_e1, open_key_n1, close_key_d1);
-    char* key_e;
-    char* key_n;
-    char* key_d;
+    QMessageBox::information(NULL,QObject::tr("Registration"), tr("Finished generation"));
+    char key_e[BUFF_SIZE];
+    char key_n[BUFF_SIZE];
+    char key_d[BUFF_SIZE];
     NumberToStr(open_key_e1, key_e);
     NumberToStr(open_key_n1, key_n);
     NumberToStr(close_key_d1, key_d);
 
-    QTextStream out(&file);
-    out << ui->lineEdit->text() << "\n" << ui->lineEdit_2->text() << "\n" << ui->lineEdit_3->text() << "\n" << key_e << "\n" << key_n << "\n" << key_d << "\n";
-    file.close();
-    int *length;
+
+    int length;
     char* regmsg = makeRegMsg(ui->lineEdit->text().toLocal8Bit().constData(),
                               ui->lineEdit_2->text().toLocal8Bit().constData(),
-                              ui->lineEdit_3->text().toLocal8Bit().constData(), key_e, key_n, length);
+                              ui->lineEdit_3->text().toLocal8Bit().constData(), key_e, key_n, &length);
 
     /*QString s = "r#"
             + ui->lineEdit->text() + '#'
             + ui->lineEdit_2->text() + '#'
             + ui->lineEdit_3->text() + "#key1#key2";
     QByteArray data = s.toUtf8() + '\n';*/
-    QString s(regmsg);
+    QString s (regmsg);
     QByteArray data = s.toUtf8();
     QMessageBox::information(NULL,QObject::tr("connectedTCP"), s);
     tcpsocket->write(data);
+
+    QTextStream out(&file);
+    out << ui->lineEdit->text() << "\n"
+        << ui->lineEdit_2->text() << "\n"
+        << ui->lineEdit_3->text() << "\n"
+        << key_e << "\n" << key_n << "\n"
+        << key_d << "\n";
+    file.close();
 
 }
 
@@ -132,8 +148,10 @@ void MainWindow::connectedTCP1()
     QString open_key_e = in.readLine();
     QString open_key_n = in.readLine();
     QString close_key_d = in.readLine();
-    char* key_d = close_key_d.toLocal8Bit().data();
-    char* key_n = open_key_n.toLocal8Bit().data();
+    char key_d[BUFF_SIZE];
+    char key_n[BUFF_SIZE];
+    strcmp(close_key_d.toLocal8Bit().data(), key_d);
+    strcmp(open_key_n.toLocal8Bit().data(), key_n);
     number num_key_d[LENGTH_2BYTES];
     number num_key_n[LENGTH_2BYTES];
     StrToNumber(key_d, num_key_d);
@@ -143,7 +161,7 @@ void MainWindow::connectedTCP1()
     number result[LENGTH_2BYTES];
     HashFunction(str_msg, res);
     SignatureRSA(res, num_key_d, num_key_n, result);
-    char* sign_message;
+    char sign_message[BUFF_SIZE];
     NumberToStr(result, sign_message);
 
     char* message = makeOpenMsg(ui->lineEdit->text().toLocal8Bit().constData(),
@@ -185,7 +203,9 @@ void MainWindow::read_Data()
 */
 void MainWindow::myexit()
 {
-    exit(0);
+    QMessageBox::information(NULL,QObject::tr("Exit"), tr("Goodbye!"));
+    close();
+    //exit(0);
 }
 void MainWindow::readTCPSocket1()
 {

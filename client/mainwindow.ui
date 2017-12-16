@@ -28,7 +28,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>580</y>
+      <y>630</y>
       <width>741</width>
       <height>101</height>
      </rect>
@@ -41,7 +41,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>690</y>
+      <y>750</y>
       <width>741</width>
       <height>101</height>
      </rect>
@@ -54,9 +54,9 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>10</y>
+      <y>990</y>
       <width>361</width>
-      <height>51</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="text">
@@ -132,6 +132,19 @@
       <width>741</width>
       <height>161</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>870</y>
+      <width>741</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete account</string>
     </property>
    </widget>
   </widget>
