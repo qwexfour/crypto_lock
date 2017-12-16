@@ -12,6 +12,8 @@
 /* IP of server */
 #define IP_SERVER "192.168.137.17"
 
+#define IP_LOCK "192.168.22.108"
+
 /* Addres of bluetooth server (lock) */
 #define AD_BTOOTH "64:5A:04:7B:D0:4C"
 

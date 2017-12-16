@@ -11,8 +11,9 @@
 
 #include "../lib/consts.h"
 #include "../lib/msglib.h"
-//#include "../lib/RSA.h"
+#include "../lib/RSA.h"
 #include "netlib.h"
+#include "locklib.h"
 
 
 #define BUFF_SIZE 255
@@ -35,8 +36,8 @@ enum res_type
 	ERROR
 };
 
-#if 0
-enum res_type analyse( char *msg )
+
+static enum res_type analyze( char *msg )
 {
 	parsed_msg_t parsed_msg;
 	char key_e_str[ BUFF_SIZE ];
@@ -59,12 +60,12 @@ enum res_type analyse( char *msg )
 	}
 	
 	/* Request keys by name from server */
-	if( !requestKey( PORT, IP_SERVER,
+	if( !requestKey( PORT_SERVER, IP_SERVER,
 					 parsed_msg.surname,
 					 parsed_msg.name,
 					 parsed_msg.patronymic,
 					 key_e_str,
-					 key_e_str )
+					 key_n_str )
 	  )
 	{
 		fprintf( stderr, "Cannot obtain keys" );
@@ -89,24 +90,25 @@ enum res_type analyse( char *msg )
 
 }
 
-#endif
 
 int btoothServer( int port )
 {
 	struct sockaddr_rc serv_addr = { 0 };    /* Address of the server */
 	struct sockaddr_rc cli_addr = { 0 };    /* Client address */
+	bdaddr_t serv_bdaddr;
 	int serv_socket = 0, cli_serv_socket = 0;
 	socklen_t cli_addr_size = sizeof( cli_addr );
 	char recv_msg[RECV_MSG_SIZE] = "";
-	char send_msg[SEND_MSG_SIZE] = "";
-	int recv_msg_len = sizeof( recv_msg );
+	char *send_msg = NULL;
+	int recv_msg_len = 0;
 	int send_msg_len = sizeof( recv_msg );
 
 
 
 	/* Filling serv_addr */
+	str2ba( AD_BTOOTH, &serv_bdaddr );
 	serv_addr.rc_family = AF_BLUETOOTH;
-	serv_addr.rc_bdaddr = *BDADDR_ANY;		/* TODO: Maybe its better to hardcode in */
+	serv_addr.rc_bdaddr = serv_bdaddr;		/* TODO: Maybe its better to hardcode in */
 	serv_addr.rc_channel = (uint8_t) port;
 
 
@@ -140,7 +142,11 @@ int btoothServer( int port )
 	while( 1 )
 	{
 		/* Accepting a client */
-		cli_serv_socket = accept( serv_socket, (struct sockaddr *)&cli_addr, &cli_addr_size );
+		if( ( cli_serv_socket = accept( serv_socket, (struct sockaddr *)&cli_addr, &cli_addr_size ) ) < 0 )
+		{
+			fprintf( stderr, "Cannot accept a client\n" );
+			continue;
+		}
 		fprintf( stderr, "Accepted a client\n" );
 
 
@@ -152,12 +158,31 @@ int btoothServer( int port )
 		}
 
 
-		//data = parseCliMsg( recv_msg );
+		/* Parse and authorize client */
+		switch( analyze( recv_msg ) )
+		{
+			case ERROR:
+				fprintf( stderr, "Received message analysis failed\n" );
+				send_msg = makeMsg( "Error", &send_msg_len );
+				break;
+			case DENIED:
+				fprintf( stderr, "Access denied\n" );
+				send_msg =  makeMsg( "Denied", &send_msg_len );
+				break;
+			case PERMITED:
+				fprintf( stderr, "Access permited\n" );
+				send_msg = makeMsg( "Permited", &send_msg_len );
+				openLock();
+				break;
+			default:
+				fprintf( stderr, "Received message analysis failed\n" );
+				send_msg = makeMsg( "Error", &send_msg_len );
+				break;
+		}
 
 
 		/* Sending a message */
-		sprintf( send_msg, "m:Permit" );
-		if( write( cli_serv_socket, send_msg, sizeof( send_msg ) ) < 0 )
+		if( write( cli_serv_socket, send_msg, send_msg_len ) < 0 )
 		{
 			fprintf( stderr, "Cannot send message to client\n" );
 			continue;
@@ -165,6 +190,5 @@ int btoothServer( int port )
 
 	}
 
-
-	return;
+	return 0;
 }

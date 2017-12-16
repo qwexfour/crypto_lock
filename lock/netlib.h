@@ -20,6 +20,7 @@ typedef struct sockaddr_in
 
 int requestKey( unsigned short port, char *addr_string, char *surname, char *name, char *patronymic, char *key_e, char *key_n );
 
+int tcpServer( unsigned short port );
 
 
 #endif /* NET_LIB */
