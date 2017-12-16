@@ -11,7 +11,7 @@ main.o: main.c
 	$(CC) $(CFLAGS) -c main.c -o main.o $(DBGINFO)
 
 netlib.o: netlib.c
-	$(CC) $(CFLAGS) -D_BSD_SOURCE -c netlib.c -o netlib.o $(DBGINFO)
+	$(CC) $(CFLAGS) -D_BSD_SOURCE -c netlib.c -o netlib.o -lm $(DBGINFO)
 
 locklib.o: locklib.c
 	$(CC) $(CFLAGS) -c locklib.c -o locklib.o $(DBGINFO)
