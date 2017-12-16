@@ -10,9 +10,11 @@
 #include <QDate>
 #include <QTime>
 #include <QFile>
+extern "C" {
 #include "lib/consts.h"
 #include "lib/msglib.h"
 #include "lib/RSA.h"
+}
 
 #define PORT_SERVER 8030
 #define PORT_LOCK 8031
@@ -96,6 +98,7 @@ void MainWindow::connectedTCP()
     QByteArray data = s.toUtf8();
     QMessageBox::information(NULL,QObject::tr("connectedTCP"), s);
     tcpsocket->write(data);
+    file.close();
 }
 
 void MainWindow::connectedTCP1()
@@ -156,6 +159,7 @@ void MainWindow::connectedTCP1()
     qDebug() << "Send data to lock";
 
     tcpsocket1->write(data);
+    file.close();
 }
 
 void MainWindow::disconnected()

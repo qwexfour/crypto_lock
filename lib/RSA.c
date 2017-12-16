@@ -30,7 +30,8 @@ int LengthLong(number a[]) {
 
 //çàíóëèòü à ëèíîé äî 16 2-õáàéòîâûõ ñëîâ
 void ZeroLong(number a[]) {
-	for (int i = 0; i < LENGTH_2BYTES; i++) {
+    int i;
+    for (i = 0; i < LENGTH_2BYTES; i++) {
 		a[i] = 0;
 	}
 }
@@ -38,7 +39,8 @@ void ZeroLong(number a[]) {
 //ïðèñâîåíèå ÷èñëó à ÷èñëî b
 void AssignLong(number a[], number b[]) {
 	ZeroLong(a);
-	for (int i = 0; i < LENGTH_2BYTES; i++) {
+    int i;
+    for (i = 0; i < LENGTH_2BYTES; i++) {
 		a[i] = b[i];
 	}
 }

@@ -42,8 +42,7 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
-CONFIG += mobility
-# c11
+CONFIG += mobility c11
 MOBILITY = connectivity
 
 
