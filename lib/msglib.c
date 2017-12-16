@@ -410,7 +410,6 @@ int parseMsg( const char *msg, parsed_msg_t *parsed_msg )
 			}
 			parsed_msg->time[i] = '\0';
 
-
 			/* Reading sign */
 			for( i = 0; ; i++, j++ )
 			{

@@ -10,7 +10,7 @@
 #define PORT_LOCK 8031
 
 /* IP of server */
-#define IP_SERVER "192.168.137.17"
+#define IP_SERVER "192.168.22.106"
 
 #define IP_LOCK "192.168.22.108"
 

@@ -47,7 +47,7 @@ static enum res_type analyze( char *msg )
 	number key_e[ LENGTH_2BYTES ];
 	number key_n[ LENGTH_2BYTES ];
 
-	if( !parseMsg( msg, &parsed_msg ) )
+	if( parseMsg( msg, &parsed_msg ) < 0 )
 	{
 		fprintf( stderr, "Cannot parse message\n" );
 		return ERROR;
@@ -60,12 +60,12 @@ static enum res_type analyze( char *msg )
 	}
 	
 	/* Request keys by name from server */
-	if( !requestKey( PORT_SERVER, IP_SERVER,
+	if( requestKey( PORT_SERVER, IP_SERVER,
 					 parsed_msg.surname,
 					 parsed_msg.name,
 					 parsed_msg.patronymic,
 					 key_e_str,
-					 key_n_str )
+					 key_n_str ) < 0
 	  )
 	{
 		fprintf( stderr, "Cannot obtain keys" );

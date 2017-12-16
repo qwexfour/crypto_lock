@@ -58,7 +58,7 @@ static enum res_type testTime( const char *recv_time_str )
 {
 	time_t raw_time;
 	struct tm *local_time;
-	struct tm recv_time;
+	struct tm recv_time = { 0 };
 
 	/* Obtaining local time */
 	time( &raw_time );
@@ -103,7 +103,7 @@ static enum res_type analyze( char *msg )
 	number key_e[ LENGTH_2BYTES ];
 	number key_n[ LENGTH_2BYTES ];
 
-	if( !parseMsg( msg, &parsed_msg ) )
+	if( parseMsg( msg, &parsed_msg ) < 0 )
 	{
 		fprintf( stderr, "Cannot parse message\n" );
 		return ERROR;
@@ -111,7 +111,7 @@ static enum res_type analyze( char *msg )
 
 	if( parsed_msg.type != OPEN )
 	{
-		fprintf( stderr, "Wrong format: must be OPEN" );
+		fprintf( stderr, "Wrong format: must be OPEN\n" );
 		return ERROR;
 	}
 	
@@ -124,16 +124,16 @@ static enum res_type analyze( char *msg )
 
 
 	/* Request keys by name from server */
-	if( !requestKey( PORT_SERVER, IP_SERVER,
+	if( requestKey( PORT_SERVER, IP_SERVER,
 					 parsed_msg.surname,
 					 parsed_msg.name,
 					 parsed_msg.patronymic,
 					 key_e_str,
 					 key_n_str
-				   )
+				   ) < 0
 	  )
 	{
-		fprintf( stderr, "Cannot obtain keys" );
+		fprintf( stderr, "Cannot obtain keys\n" );
 		return DENIED;
 	}
 
@@ -218,8 +218,10 @@ int tcpServer( unsigned short port )
 		if( ( recv_msg_len = recv( cli_socket, recv_msg, BUFF_SIZE, 0 ) ) < 0 )
 		{
 			fprintf( stderr, "Cannot receive data from client\n" );
+			close( cli_socket );
 			continue;
 		}
+		fprintf( stderr, "Received:%s\n", recv_msg );
 
 
 		/* Parse and authorize client */
@@ -245,13 +247,19 @@ int tcpServer( unsigned short port )
 		}
 
 
+
 		/* Sending a message */
 		if( send( cli_socket, send_msg, send_msg_len, 0 ) < 0 )
 		{
 			fprintf( stderr, "Cannot send message to client\n" );
+			close( cli_socket );
 			continue;
 		}
+
+		close( cli_socket );
 	}
+
+	close( serv_socket );
 
 	return 0;
 }
@@ -311,7 +319,7 @@ int requestKey( unsigned short port, char *addr_string, char *surname, char *nam
 	fprintf( stderr, "Received:%s\n", recv_msg );
 
 	/* Parsing keys */
-	if( !keyFromServMsg( recv_msg, key_e, key_n ) )
+	if( keyFromServMsg( recv_msg, key_e, key_n ) < 0 )
 	{
 		fprintf( stderr, "Cannot parse key\n" );
 		return -1;
