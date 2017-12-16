@@ -16,10 +16,10 @@ extern "C" {
 #include "lib/RSA.h"
 }
 
-#define PORT_SERVER 8030
-#define PORT_LOCK 8031
-#define IP_SERVER "192.168.137.17"
-#define IP_LOCK "192.168.137.31"
+//#define PORT_SERVER 8030
+//#define PORT_LOCK 8031
+//#define IP_SERVER "192.168.137.17"
+//#define IP_LOCK "192.168.137.31"
 //#define AD_BTOOTH "A0:E9:DB:06:58:58"
 
 using namespace std;
@@ -52,7 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::connectedTCP()
 {
-    ui->pushButton->setEnabled(false);
+    //ui->pushButton->setEnabled(false);
     //tcpsocket->connectToHost("192.168.31.140", 5039);
     //    qDebug() << "Connect to host";
 
@@ -83,7 +83,7 @@ void MainWindow::connectedTCP()
 
     QTextStream out(&file);
     out << ui->lineEdit->text() << "\n" << ui->lineEdit_2->text() << "\n" << ui->lineEdit_3->text() << "\n" << key_e << "\n" << key_n << "\n" << key_d << "\n";
-
+    file.close();
     int *length;
     char* regmsg = makeRegMsg(ui->lineEdit->text().toLocal8Bit().constData(),
                               ui->lineEdit_2->text().toLocal8Bit().constData(),
@@ -98,12 +98,12 @@ void MainWindow::connectedTCP()
     QByteArray data = s.toUtf8();
     QMessageBox::information(NULL,QObject::tr("connectedTCP"), s);
     tcpsocket->write(data);
-    file.close();
+
 }
 
 void MainWindow::connectedTCP1()
 {
-    ui->pushButton_2->setEnabled(false);
+    //ui->pushButton_2->setEnabled(false);
     QMessageBox::information(NULL,QObject::tr("connectedTCP1"),tr("Connected to TCP1"));
     QDate date = QDate::currentDate();
     QTime time = QTime::currentTime();
@@ -159,6 +159,9 @@ void MainWindow::connectedTCP1()
     qDebug() << "Send data to lock";
 
     tcpsocket1->write(data);
+    ui->lineEdit->clear();
+    ui->lineEdit_2->clear();
+    ui->lineEdit_3->clear();
     file.close();
 }
 
@@ -343,7 +346,17 @@ void MainWindow::ComeIn()
     connect(tcpsocket1, &QTcpSocket::connected, this, &MainWindow::connectedTCP1);
     connect(tcpsocket1, &QTcpSocket::disconnected, this, &MainWindow::disconnected);
 
-    tcpsocket->connectToHost(IP_LOCK, PORT_LOCK);
+//    using err_t = void (QAbstractSocket::*)(QAbstractSocket::SocketState);
+//    connect(tcpsocket1, &QTcpSocket::error, static_cast<err_t>(&QAbstractSocket::error), [=](QAbstractSocket::SocketError err) {
+//        QMessageBox::information(NULL,QObject::tr("Error"), "Error: " + int(err));
+//    });
+    connect(tcpsocket1, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+          [=](QAbstractSocket::SocketError err){
+                QMessageBox::information(NULL,QObject::tr("Error"), "Error: " + tcpsocket1->errorString());
+    });
+
+
+    tcpsocket1->connectToHost(IP_LOCK, PORT_LOCK);
 /*
      QMessageBox::information(NULL,QObject::tr("Информация"),tr("Не все так плохо..."));
 
