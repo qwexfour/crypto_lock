@@ -12,7 +12,7 @@
 #define MAXNUMBER ((number)(-1))
 
 #define LENGTH_BITS 256 //length of number 
-#define LENGTH_2BYTES LENGTH_BITS / 16 //length 2-хбайтовых чисел
+#define LENGTH_2BYTES LENGTH_BITS / 16 //length 2-ГµГЎГ Г©ГІГ®ГўГ»Гµ Г·ГЁГ±ГҐГ«
 
 typedef unsigned short number;
 typedef unsigned long twonumber;
@@ -21,21 +21,21 @@ typedef unsigned long twonumber;
 #define HIWORD(T)((unsigned short)(T>>16))
 #define MAKELONG(a,b) ((((unsigned long long int)(a))<<16)+b)
 
-//длина числа а
+//Г¤Г«ГЁГ­Г  Г·ГЁГ±Г«Г  Г 
 int LengthLong(number a[]) {
 	int i = LENGTH_2BYTES - 1;
 	while (a[i] == 0) i--;
 	return i + 1;
 }
 
-//занулить а линой до 16 2-хбайтовых слов
+//Г§Г Г­ГіГ«ГЁГІГј Г  Г«ГЁГ­Г®Г© Г¤Г® 16 2-ГµГЎГ Г©ГІГ®ГўГ»Гµ Г±Г«Г®Гў
 void ZeroLong(number a[]) {
 	for (int i = 0; i < LENGTH_2BYTES; i++) {
 		a[i] = 0;
 	}
 }
 
-//присвоение числу а число b
+//ГЇГ°ГЁГ±ГўГ®ГҐГ­ГЁГҐ Г·ГЁГ±Г«Гі Г  Г·ГЁГ±Г«Г® b
 void AssignLong(number a[], number b[]) {
 	ZeroLong(a);
 	for (int i = 0; i < LENGTH_2BYTES; i++) {
@@ -70,7 +70,7 @@ static void DiffLong(number a[], number b[], number c[]) {
 	}
 }
 
-// 1 если а>b, -1 если a<b, 0 если a=b
+// 1 ГҐГ±Г«ГЁ Г >b, -1 ГҐГ±Г«ГЁ a<b, 0 ГҐГ±Г«ГЁ a=b
 int CmpLong(number a[], number b[]) {
 	int i = 0;
 	int s = LengthLong(a);
@@ -85,7 +85,7 @@ int CmpLong(number a[], number b[]) {
 	return 0;
 }
 
-//сгенерировать слчайное a
+//Г±ГЈГҐГ­ГҐГ°ГЁГ°Г®ГўГ ГІГј Г±Г«Г·Г Г©Г­Г®ГҐ a
 void RandLong(number a[], int s) {
 
 	int i = 0;
@@ -136,7 +136,7 @@ static void SquareLong(number a[], number c[]) {
 	MultLong(a, tmp, c);
 }
 
-//печать числа
+//ГЇГҐГ·Г ГІГј Г·ГЁГ±Г«Г 
 void PrintfLong(number a[]) {
 	int i = 0;
 	i = LENGTH_2BYTES - 1;
@@ -213,12 +213,12 @@ void PowerModBinary(number a[], number b[], number mod[], number result[]) {
 	}
 }
 
-//подпись текста m
+//ГЇГ®Г¤ГЇГЁГ±Гј ГІГҐГЄГ±ГІГ  m
 void SignatureRSA(number m[], number close_key_d[], number open_key_n[],number result[]) {
 	PowerModBinary(m, close_key_d, open_key_n, result);
 }
 
-//проверка подписи, 1-пройдена, -1-не пройдена
+//ГЇГ°Г®ГўГҐГ°ГЄГ  ГЇГ®Г¤ГЇГЁГ±ГЁ, 1-ГЇГ°Г®Г©Г¤ГҐГ­Г , -1-Г­ГҐ ГЇГ°Г®Г©Г¤ГҐГ­Г 
 int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number open_key_n[]) {
 	number m1[LENGTH_2BYTES];
 	ZeroLong(m1);
@@ -227,7 +227,7 @@ int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number
 	return -1;
 }
 
-//a*x+b*y = Нод(a,b) = d
+//a*x+b*y = ГЌГ®Г¤(a,b) = d
 static void ExtendedEuklidLong(number a[], number b[], number x[], number y[], number d[]) {
 	number q[LENGTH_2BYTES];
 	number r[LENGTH_2BYTES];
@@ -287,7 +287,7 @@ static void ExtendedEuklidLong(number a[], number b[], number x[], number y[], n
 	AssignLong(y, y2);
 }
 
-//c - обратный к a по модулю n, (работает с ошибками из за беззнаковых чисел)
+//c - Г®ГЎГ°Г ГІГ­Г»Г© ГЄ a ГЇГ® Г¬Г®Г¤ГіГ«Гѕ n, (Г°Г ГЎГ®ГІГ ГҐГІ Г± Г®ГёГЁГЎГЄГ Г¬ГЁ ГЁГ§ Г§Г  ГЎГҐГ§Г§Г­Г ГЄГ®ГўГ»Гµ Г·ГЁГ±ГҐГ«)
 static void InverseLong(number a[], number n[], number c[]) {
 	number d[LENGTH_2BYTES];
 	number x[LENGTH_2BYTES];
@@ -312,7 +312,7 @@ static void InverseLong(number a[], number n[], number c[]) {
 	ZeroLong(c);
 }
 
-//тест на простоту, если 1 - тест пройден, если -1 - не пройден
+//ГІГҐГ±ГІ Г­Г  ГЇГ°Г®Г±ГІГ®ГІГі, ГҐГ±Г«ГЁ 1 - ГІГҐГ±ГІ ГЇГ°Г®Г©Г¤ГҐГ­, ГҐГ±Г«ГЁ -1 - Г­ГҐ ГЇГ°Г®Г©Г¤ГҐГ­
 int TestMilleraRabina(number a[]) {
 	number two = 0x0002;
 	number one[LENGTH_2BYTES];
@@ -376,7 +376,7 @@ int TestMilleraRabina(number a[]) {
 	return 1;
 }
 
-//генерация простого числа a, заданной длины
+//ГЈГҐГ­ГҐГ°Г Г¶ГЁГї ГЇГ°Г®Г±ГІГ®ГЈГ® Г·ГЁГ±Г«Г  a, Г§Г Г¤Г Г­Г­Г®Г© Г¤Г«ГЁГ­Г»
 void GenPrimeNumber(number a[], int Length_a) {
 	RandLong(a, Length_a);
 	number two[LENGTH_2BYTES];
@@ -392,7 +392,7 @@ void GenPrimeNumber(number a[], int Length_a) {
 	}
 }
 
-//генерация открытог и закрытого ключей
+//ГЈГҐГ­ГҐГ°Г Г¶ГЁГї Г®ГІГЄГ°Г»ГІГ®ГЈ ГЁ Г§Г ГЄГ°Г»ГІГ®ГЈГ® ГЄГ«ГѕГ·ГҐГ©
 void GenKeys(number open_key_e[], number open_key_n[], number close_key_d[]) {
 	number p[LENGTH_2BYTES];
 	number q[LENGTH_2BYTES];
@@ -475,3 +475,4 @@ void HashFunction(char *c, number res[]) {
 
 #endif /*RSA_h*/
 //1505Oooo
+

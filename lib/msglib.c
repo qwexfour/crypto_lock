@@ -81,6 +81,25 @@ char *makeOpenMsg( const char *surname, const char *name, const char *patronymic
 }
 
 
+char *makeMsg( const char *text, int *length )
+{
+	char *send_msg;
+	int len;
+
+	len = 4 + strlen( text );
+	send_msg = (char *)calloc( len, sizeof( *send_msg ) );
+	sprintf( send_msg, "m#%s\n", text );
+
+
+	if( length != NULL )
+	{
+		*length = len;
+	}
+	return send_msg;
+}
+
+
+
 int parseMsg( const char *msg, parsed_msg_t *parsed_msg )
 {
 	char ch;
@@ -386,8 +405,10 @@ int parseMsg( const char *msg, parsed_msg_t *parsed_msg )
 					j++;
 					break;
 				}
+				parsed_msg->time[i] = ch;
 				parsed_msg->text[j] = ch;
 			}
+			parsed_msg->time[i] = '\0';
 
 
 			/* Reading sign */

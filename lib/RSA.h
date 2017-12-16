@@ -15,7 +15,7 @@ typedef unsigned long twonumber;
 #define HIWORD(T)((unsigned short)(T>>16))
 #define MAKELONG(a,b) ((((unsigned long long int)(a))<<16)+b)
 
-//length of number à
+//length of number Ã 
 int LengthLong(number a[]);
 
 void ZeroLong(number a[]);
@@ -58,3 +58,4 @@ void NumberToStr(number a[], char *res);
 void StrToNumber(char *a, number res[]);
 
 void HashFunction(char *c, number res[]);
+

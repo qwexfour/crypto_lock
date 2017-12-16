@@ -25,6 +25,7 @@ typedef struct parsed_msg
 	char key_e[BUFF_SIZE];
 	char key_n[BUFF_SIZE];
 	char sign[BUFF_SIZE];
+	char time[BUFF_SIZE];
 } parsed_msg_t;
 
 
@@ -42,6 +43,9 @@ char *makeRegMsg  ( const char *surname, const char *name, const char *patronymi
 char *makeOpenText( const char *surname, const char *name, const char *patronymic, const char *time, int *length );
 
 char *makeOpenMsg ( const char *surname, const char *name, const char *patronymic, const char *time, const char *sign, int *length );
+
+char *makeMsg     ( const char *text, int *length );
+
 
 
 /* Returns 0 if the message parsed successfully */
