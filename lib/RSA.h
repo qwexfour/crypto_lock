@@ -1,7 +1,6 @@
-#include "stdlib.h"
-#include "time.h"
-#include "longdiv.h"
 #include <stdlib.h>
+#include <time.h>
+#include "longdiv.h"
 
 #define MAXNUMBER ((number)(-1))
 
