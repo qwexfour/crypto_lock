@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include <time.h>
-#include "longdiv.h"
-=======
->>>>>>> fd183924629c61df7aeda70d466421682137bff8
+
 #include <stdlib.h>
 #include <time.h>
 #include "longdiv.h"

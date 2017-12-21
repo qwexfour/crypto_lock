@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-#include <stdlib.h>
-#include <time.h>
-#include "longdiv.h"
-=======
->>>>>>> fd183924629c61df7aeda70d466421682137bff8
+
 #include <stdlib.h>
 #include <time.h>
 #include "longdiv.h"
@@ -97,7 +92,7 @@ int CmpLong(number a[], number b[]) {
 void RandLong(number a[], int s) {
 
 	int i = 0;
-	//srand( time( NULL ) );
+    //srand( time( NULL ) );
 	for (i = 0; i < s; i++) {
 		a[i] = LOWORD(rand() % 256) + LOWORD(rand() << 8);
 	}
@@ -490,8 +485,8 @@ void HashFunction(char *c, number res[]) {
 	printf("%d \n", s);
 	int i = 0;
 	int j = 0;
-	for (i; i < s; i++) {
-		res[i%16] += (number)c[i]*i;
+    for (i; i < s - 1; i++) {
+        res[i%16] += (number)c[i]*(i + 1);
 	}
 }
 
