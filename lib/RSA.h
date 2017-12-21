@@ -1,5 +1,4 @@
-#include "stdlib.h"
-#include "time.h"
+#include <time.h>
 #include "longdiv.h"
 #include <stdlib.h>
 
