@@ -223,9 +223,13 @@ void SignatureRSA(number m[], number close_key_d[], number open_key_n[],number r
 //ïðîâåðêà ïîäïèñè, 1-ïðîéäåíà, -1-íå ïðîéäåíà
 int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number open_key_n[]) {
 	number m1[LENGTH_2BYTES];
+	number m2[LENGTH_2BYTES];
+	number tmp[LENGTH_2BYTES];
+
 	ZeroLong(m1);
+	Div( m, open_key_n, tmp, m2, LENGTH_2BYTES, LENGTH_2BYTES );
 	PowerModBinary(s, open_key_e, open_key_n, m1);
-	if (CmpLong(m, m1) == 0) return 1;
+	if (CmpLong(m2, m1) == 0) return 1;
 	return -1;
 }
 
