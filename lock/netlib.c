@@ -20,7 +20,7 @@
 
 #define BUFF_SIZE 255
 #define MAX_PENDING 17
-#define TIME_LIMIT 10
+#define TIME_LIMIT 20
 
 
 
@@ -28,7 +28,7 @@ static int keyFromServMsg( char *msg, char *key_e, char *key_n )
 {
 	parsed_msg_t parsed_msg;
 	
-	if( !parseMsg( msg, &parsed_msg ) )
+	if( parseMsg( msg, &parsed_msg ) < 0 )
 	{
 		fprintf( stderr, "Cannot parse\n" );
 		return -1;
@@ -74,14 +74,23 @@ static enum res_type testTime( const char *recv_time_str )
 							&recv_time.tm_sec
 		  );
 
+	/* Dump */
+#if 0
+	printf( "Loc %d recv %d\n", local_time->tm_mday, recv_time.tm_mday );
+	printf( "Loc %d recv %d\n", local_time->tm_mon + 1, recv_time.tm_mon );
+	printf( "Loc %d recv %d\n", local_time->tm_year - 100, recv_time.tm_year );
+	printf( "Loc %d recv %d\n", local_time->tm_hour, recv_time.tm_hour );
+	printf( "Loc %d recv %d\n", local_time->tm_min, recv_time.tm_min );
+	printf( "Loc %d recv %d\n", local_time->tm_sec, recv_time.tm_sec );
+#endif
+
 
 	/* Comparing */
 	if( recv_time.tm_mday == local_time->tm_mday		&&
 		recv_time.tm_mon  == local_time->tm_mon + 1     &&
-		recv_time.tm_year == local_time->tm_year + 1900 &&
-		recv_time.tm_hour == local_time->tm_hour		&&
-		recv_time.tm_min  == local_time->tm_min			&&
-		abs( recv_time.tm_sec - local_time->tm_sec ) < TIME_LIMIT
+		recv_time.tm_year == local_time->tm_year - 100  &&
+		abs( recv_time.tm_hour * 3600 + recv_time.tm_min * 60 + recv_time.tm_sec 
+		- local_time->tm_hour * 3600 - local_time->tm_min * 60 - local_time->tm_sec ) < TIME_LIMIT
 	  )
 	{
 		return PERMITED;
@@ -147,10 +156,12 @@ static enum res_type analyze( char *msg )
 
 	if( VerificationSignatureRSA( msg_hash, sign, key_e, key_n ) == 1 )
 	{
+		fprintf( stderr, "RSA verification succeeded\n" );
 		return PERMITED;
 	}
 	else
 	{
+		fprintf( stderr, "RSA verification failed\n" );
 		return DENIED;
 	}
 
