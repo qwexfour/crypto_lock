@@ -21,6 +21,7 @@ public:
     void SignUp();
     //void ComeIn(const QBluetoothServiceInfo &remoteService);
     void ComeIn();
+    void delete_account();
 
 signals:
     void messageReceived(const QString &sender, const QString &message);
