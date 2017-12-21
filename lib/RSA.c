@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 #include <stdlib.h>
 #include <time.h>
 #include "longdiv.h"
+=======
+>>>>>>> fd183924629c61df7aeda70d466421682137bff8
 #include <stdlib.h>
+#include <time.h>
+#include "longdiv.h"
 #include <string.h>
 #include <stdio.h>
 #include "RSA.h"
@@ -24,7 +29,8 @@ typedef unsigned long twonumber;
 //äëèíà ÷èñëà à
 int LengthLong(number a[]) {
 	int i = LENGTH_2BYTES - 1;
-	while (a[i] == 0) i--;
+	while ( i >= 0 && a[i] == 0 ) 
+		i--;
 	return i + 1;
 }
 
@@ -80,7 +86,7 @@ int CmpLong(number a[], number b[]) {
 	if (s > t) return 1;
 	if (s < t) return -1;
 
-	for (i = s; i >= 0; i--) {
+	for (i = s - 1; i >= 0; i--) {
 		if (a[i] > b[i]) return 1;
 		if (a[i] < b[i]) return -1;
 	}
@@ -91,7 +97,7 @@ int CmpLong(number a[], number b[]) {
 void RandLong(number a[], int s) {
 
 	int i = 0;
-	//srand(time(NULL));
+	//srand( time( NULL ) );
 	for (i = 0; i < s; i++) {
 		a[i] = LOWORD(rand() % 256) + LOWORD(rand() << 8);
 	}
@@ -227,6 +233,8 @@ int VerificationSignatureRSA(number m[], number s[], number open_key_e[], number
 	number tmp[LENGTH_2BYTES];
 
 	ZeroLong(m1);
+	ZeroLong(m2);
+	ZeroLong(tmp);
 	Div( m, open_key_n, tmp, m2, LENGTH_2BYTES, LENGTH_2BYTES );
 	PowerModBinary(s, open_key_e, open_key_n, m1);
 	if (CmpLong(m2, m1) == 0) return 1;
@@ -355,11 +363,13 @@ int TestMilleraRabina(number a[]) {
 			s = s + 1;
 		}
 	}
+#if 0
 	if (s == 0) { 
 		SumLong(a, one, tmp, res);
 		AssignLong(a, tmp);
 		return -1;
 	}
+#endif
 
 	ZeroLong(tmp);
 
@@ -391,6 +401,11 @@ void GenPrimeNumber(number a[], int Length_a) {
 	ZeroLong(tmp);
 	two[0] = 0x0002;
 	number r[1] = { 0 };
+
+	if( a[0] % 2 == 0 )
+	{
+		a[0]++;
+	}
 	while (TestMilleraRabina(a)!=1)
 	{
 		SumLong(a, two, tmp, r);
@@ -410,6 +425,7 @@ void GenKeys(number open_key_e[], number open_key_n[], number close_key_d[]) {
 	number tmp1[LENGTH_2BYTES];
 	number one[LENGTH_2BYTES];
 	number prover[LENGTH_2BYTES * 2+1];
+
 
 	ZeroLong(p);
 	ZeroLong(q);
