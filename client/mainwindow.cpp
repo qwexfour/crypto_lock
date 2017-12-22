@@ -5,11 +5,12 @@
 #include <QBluetoothServiceInfo>
 #include <QMessageBox>
 //#include <iostream>
-//#include <сstdlib>
+#include <stdlib.h>
 #include <QDateTime>
 #include <QDate>
 #include <QTime>
 #include <QFile>
+#include <string.h>
 extern "C" {
 #include "lib/consts.h"
 #include "lib/msglib.h"
@@ -80,7 +81,7 @@ void MainWindow::connectedTCP()
     number open_key_e1[LENGTH_2BYTES];
     number open_key_n1[LENGTH_2BYTES];
     number close_key_d1[LENGTH_2BYTES];
-    QMessageBox::information(NULL,QObject::tr("Registration"), tr("Start generation"));
+    //QMessageBox::information(NULL,QObject::tr("Registration"), tr("Start generation"));
     srand(time(NULL));
     GenKeys(open_key_e1, open_key_n1, close_key_d1);
 
@@ -89,7 +90,7 @@ void MainWindow::connectedTCP()
     char key_n[BUFF_SIZE];// = "20f6 db30 dbea 9878 211b aa05 6c93 3124 d697 942a 0a0c 27fc 5158 4ac9 342c bf3b";
     char key_d[BUFF_SIZE];// = "0917 909b 26cf bb75 cdbb d2be 71cd eb78 4bbc 9435 8d2d 54a8 88ae d684 18de bf03";
 
-    QMessageBox::information(NULL,QObject::tr("Registration"), tr("Finished generation"));
+    //QMessageBox::information(NULL,QObject::tr("Registration"), tr("Finished generation"));
 
     NumberToStr(open_key_e1, key_e);
     NumberToStr(open_key_n1, key_n);
@@ -108,7 +109,7 @@ void MainWindow::connectedTCP()
     QByteArray data = s.toUtf8() + '\n';*/
     QString s (regmsg);
     QByteArray data = s.toUtf8();
-    QMessageBox::information(NULL,QObject::tr("connectedTCP"), s);
+    /*QMessageBox::information(NULL,QObject::tr("connectedTCP"), s);*/
     tcpsocket->write(data);
 
     QTextStream out(&file);
@@ -124,7 +125,7 @@ void MainWindow::connectedTCP()
 void MainWindow::connectedTCP1()
 {
     //ui->pushButton_2->setEnabled(false);
-    QMessageBox::information(NULL,QObject::tr("connectedTCP1"),tr("Connected to TCP1"));
+    QMessageBox::information(NULL,QObject::tr("connectedTCP1 (Lock)"),tr("Connected to TCP1 (Lock)"));
     QDate date = QDate::currentDate();
     QTime time = QTime::currentTime();
 
@@ -134,8 +135,7 @@ void MainWindow::connectedTCP1()
                              ui->lineEdit_2->text().toLocal8Bit().constData(),
                              ui->lineEdit_3->text().toLocal8Bit().constData(),
                              date_time.toLocal8Bit().constData(), NULL);
-    QString makeopenstr(str_msg);
-    QMessageBox::information(NULL,QObject::tr("makeOpenText"), makeopenstr);
+
 
     QFile file("Keys.txt");
     if(!file.exists())
@@ -166,14 +166,20 @@ void MainWindow::connectedTCP1()
 
     number res[LENGTH_2BYTES];
     number result[LENGTH_2BYTES];
+    /*int length_of_str = strlen(str_msg);
+    QString makeopenstr(str_msg);
+    QMessageBox::information(NULL,QObject::tr("makeOpenText"), makeopenstr);*/
     HashFunction(str_msg, res);
     //QString str_key_d(key_d);
     //QMessageBox::information(NULL,QObject::tr("Key_d"), str_key_d);
 
 
-    char s2[BUFF_SIZE];
+    /*char s2[BUFF_SIZE];
     NumberToStr(res,s2);
-    QMessageBox::information(NULL,QObject::tr("Hashfunc"), s2);
+    char tmp_str[BUFF_SIZE];
+    sprintf( tmp_str, "%d", length_of_str);
+    QString length_str(tmp_str);
+    QMessageBox::information(NULL,QObject::tr("Hashfunc"), "length of str_msg " + length_str + " " + s2);*/
 
 
     SignatureRSA(res, num_key_d, num_key_n, result);
@@ -189,7 +195,7 @@ void MainWindow::connectedTCP1()
     QByteArray data = s.toUtf8();
     // data.append(s); // or  QByteArray data = s.toUtf8() + '\n';
 
-    QMessageBox::information(NULL,QObject::tr("connectedTCP1"),"sending: " + s);
+    /*QMessageBox::information(NULL,QObject::tr("connectedTCP1"),"sending: " + s);*/
     qDebug() << "Send data to lock";
 
     tcpsocket1->write(data);
@@ -294,7 +300,7 @@ void MainWindow::SignUp()
 
     if (tcpsocket)
     {
-        QMessageBox::information(NULL,QObject::tr("Информация"),tr("Socket is created"));
+        QMessageBox::information(NULL,QObject::tr("Информация"),tr("Socket is created and press Delete account and Exit to SignUp again!"));
         return;
     }
 
@@ -380,7 +386,7 @@ void MainWindow::ComeIn()
 {
     if (tcpsocket1)
     {
-        QMessageBox::information(NULL,QObject::tr("Информация"),tr("Socket1 is created"));
+        QMessageBox::information(NULL,QObject::tr("Информация"),tr("Socket1 is created! Press Exit to SignIn again!"));
         return;
     }
     // Connect to server

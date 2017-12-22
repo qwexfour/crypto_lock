@@ -487,6 +487,10 @@ void HashFunction(char *c, number res[]) {
 	ZeroLong( res );
 	for (i = 0; i < s - 1; i++)
 	{
+        if (c[i] == '\n')
+        {
+            break;
+        }
 		res[i%16] += (number)c[i]*(i + 1);
 	}
 }
