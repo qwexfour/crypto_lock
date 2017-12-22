@@ -112,6 +112,8 @@ static enum res_type analyze( char *msg )
 	number key_e[ LENGTH_2BYTES ];
 	number key_n[ LENGTH_2BYTES ];
 
+	char msg_hash_str[ BUFF_SIZE ];
+
 	if( parseMsg( msg, &parsed_msg ) < 0 )
 	{
 		fprintf( stderr, "Cannot parse message\n" );
@@ -153,6 +155,9 @@ static enum res_type analyze( char *msg )
 	StrToNumber( parsed_msg.sign, sign );
 
 	HashFunction( parsed_msg.text, msg_hash );
+
+	NumberToStr( msg_hash, msg_hash_str );
+	fprintf( stderr, "Text: %s\nHash: %s\n",parsed_msg.text, msg_hash_str );
 
 	if( VerificationSignatureRSA( msg_hash, sign, key_e, key_n ) == 1 )
 	{

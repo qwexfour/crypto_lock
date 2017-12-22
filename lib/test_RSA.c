@@ -18,14 +18,12 @@ int main( void )
 	
 	srand( time( NULL ) );
 	RandLong( msg, LENGTH_2BYTES );
-	printf( "MSG: " );
-	PrintfLong( msg );
+	//printf( "MSG: " );
+	//PrintfLong( msg );
 	GenKeys( key_e, key_n, key_d );
 	SignatureRSA( msg, key_d, key_n, sign );
-	printf( "Sign: " );
-	PrintfLong( sign );
-	printf( "MSG: " );
-	PrintfLong( msg );
+	//printf( "Sign: " );
+	//PrintfLong( sign );
 	res = VerificationSignatureRSA( msg, sign, key_e, key_n );
 
 	printf( "%d\n", res );

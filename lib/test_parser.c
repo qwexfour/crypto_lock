@@ -11,7 +11,7 @@ int main( int argc, char **argv )
 	if( argc < 2 )
 		return 0;
 
-	if( !parseMsg( argv[1], &p ) )
+	if( parseMsg( argv[1], &p ) == 0 )
 	{
 		printf( "Surname:    %s\n", p.surname );
 		printf( "Name:       %s\n", p.name );

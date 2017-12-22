@@ -481,11 +481,10 @@ void StrToNumber(char *a, number res[]) {
 
 void HashFunction(char *c, number res[]) {
 	int s = strlen(c);
-	printf("%d \n", s);
+	//printf("%d \n", s);
 	int i = 0;
-	int j = 0;
-	for (i; i < s; i++) {
-		res[i%16] += (number)c[i]*i;
+	for (i = 0; i < s - 1; i++) {
+		res[i%16] += (number)c[i]*(i + 1);
 	}
 }
 
