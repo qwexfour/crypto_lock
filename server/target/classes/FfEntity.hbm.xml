@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="base.FfEntity" table="ff" schema="public" catalog="postgres">
+        <id name="id">
+            <column name="id" sql-type="integer"/>
+            <generator class="increment"/>
+        </id>
+        <property name="surname">
+            <column name="surname" sql-type="varchar" not-null="true"/>
+        </property>
+        <property name="firstName">
+            <column name="first_name" sql-type="varchar" not-null="true"/>
+        </property>
+        <property name="patronymic">
+            <column name="patronymic" sql-type="varchar" not-null="true"/>
+        </property>
+        <property name="publicKey">
+            <column name="public_key" sql-type="varchar" not-null="true"/>
+        </property>
+        <property name="auth">
+            <column name="auth" sql-type="varchar" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
