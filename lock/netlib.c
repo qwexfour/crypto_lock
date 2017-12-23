@@ -40,8 +40,8 @@ static int keyFromServMsg( char *msg, char *key_e, char *key_n )
 		return -1;
 	}
 
-	strcpy( parsed_msg.key_e, key_e );
-	strcpy( parsed_msg.key_n, key_n );
+	strcpy( key_e, parsed_msg.key_e );
+	strcpy( key_n, parsed_msg.key_n );
 
 	return 0;
 }
@@ -133,6 +133,11 @@ static enum res_type analyze( char *msg )
 		return DENIED;
 	}
 
+	HashFunction( parsed_msg.text, msg_hash );
+
+	NumberToStr( msg_hash, msg_hash_str );
+	fprintf( stderr, "Text: %s\nHash:",parsed_msg.text );
+	PrintfLong( msg_hash );
 
 	/* Request keys by name from server */
 	if( requestKey( PORT_SERVER, IP_SERVER,
@@ -153,11 +158,6 @@ static enum res_type analyze( char *msg )
 	StrToNumber( key_e_str, key_e );
 	StrToNumber( key_n_str, key_n );
 	StrToNumber( parsed_msg.sign, sign );
-
-	HashFunction( parsed_msg.text, msg_hash );
-
-	NumberToStr( msg_hash, msg_hash_str );
-	fprintf( stderr, "Text: %s\nHash: %s\n",parsed_msg.text, msg_hash_str );
 
 	if( VerificationSignatureRSA( msg_hash, sign, key_e, key_n ) == 1 )
 	{

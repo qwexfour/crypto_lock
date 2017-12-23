@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <string.h>
 
 #include "RSA.h"
 #include "msglib.h"
@@ -19,11 +19,11 @@ int main( void )
 	char *text_str, *send_str;
 	char sign_str[BUFF_SIZE];
 	parsed_msg_t parsed_msg;
-	int res;
+	int res, i;
 	
 	srand( time( NULL ) );
 	//RandLong( msg, LENGTH_2BYTES );
-	text_str = makeOpenText( "Иванов", "Иван", "Иванович", "19 12 17 16 33 23", NULL );
+	text_str = makeOpenText( "Ivanov", "Ivan", "Ivanovich", "19 12 17 16 33 23", NULL );
 	HashFunction( text_str, msg );
 	
 	printf( "Text hash: " );
@@ -33,7 +33,7 @@ int main( void )
 	SignatureRSA( msg, key_d, key_n, sign );
 	NumberToStr( sign, sign_str );
 
-	send_str = makeOpenMsg( "Иванов", "Иван", "Иванович", "19 12 17 16 33 23", sign_str, NULL );
+	send_str = makeOpenMsg( "Ivanov", "Ivan", "Ivanovich", "19 12 17 16 33 23", sign_str, NULL );
 	//printf( "Sign: " );
 	//PrintfLong( sign );
 
